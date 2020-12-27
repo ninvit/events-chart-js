@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useReducer, useState } from "react";
+
 import { useMeasure } from "react-use";
 import {
   CartesianGrid,
@@ -9,27 +10,54 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
-import "./index.css";
+
+import "./App.css";
+
+const formReducer = (state, event) => {
+  if (event.reset) {
+    return {
+      type: "",
+      timestamp: "",
+      os: "",
+      browser: "",
+      maxResponseTime: "",
+      minResponseTime: "",
+    };
+  }
+  return {
+    ...state,
+    [event.name]: event.value,
+  };
+};
 
 export const App = () => {
-
-  
   const [containerRef] = useMeasure();
+  const [formData, setFormData] = useReducer(formReducer, {});
 
-  const data = [
-    {
-      timestamp: "1234",
-      uv: 4000,
-      pv: 2400,
-    }
-  ];
+  const [submitting, setSubmitting] = useState(false);
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    setSubmitting(true);
+  };
+
+  const handleChange = (event) => {
+    const isCheckbox = event.target.type === "checkbox";
+    setFormData({
+      name: event.target.name,
+      value: isCheckbox ? event.target.checked : event.target.value,
+    });
+  };
+
+  const data = [formData];
 
   return (
     <div id="container" ref={containerRef}>
-      <form>
+      <form onSubmit={handleSubmit}>
         <label>
           Type:
-          <select>
+          <select onChange={handleChange} name="Type" value={formData.type}>
+            <option value="">--choose--</option>
             <option value="data">data</option>
             <option value="span">span</option>
             <option value="start">start</option>
@@ -39,12 +67,18 @@ export const App = () => {
 
         <label>
           Timestamp:
-          <input type="text" name="timestamp" />
+          <input
+            type="text"
+            name="timestamp"
+            onChange={handleChange}
+            value={formData.timestamp}
+          />
         </label>
 
         <label>
           OS:
-          <select>
+          <select onChange={handleChange} name="OS" value={formData.os}>
+            <option value="">--choose--</option>
             <option value="Windows">Windows</option>
             <option value="Linux">Linux</option>
             <option value="MacOs">MacOs</option>
@@ -53,7 +87,12 @@ export const App = () => {
 
         <label>
           Browser:
-          <select>
+          <select
+            onChange={handleChange}
+            name="Browser"
+            value={formData.browser}
+          >
+            <option value="">--choose--</option>
             <option value="Chrome">Chrome</option>
             <option value="Firefox">Firefox</option>
             <option value="Edge">Edge</option>
@@ -61,18 +100,42 @@ export const App = () => {
         </label>
 
         <label>
-          MaxResponseTime:
-          <input type="text" name="maxResponseTime" />
+          MinResponseTime:
+          <input
+            type="text"
+            name="minResponseTime"
+            onChange={handleChange}
+            value={formData.minResponseTime}
+          />
         </label>
 
         <label>
-          MinResponseTime:
-          <input type="text" name="minResponseTime" />
+          MaxResponseTime:
+          <input
+            type="text"
+            name="maxResponseTime"
+            onChange={handleChange}
+            value={formData.maxResponseTime}
+          />
         </label>
 
-
-        <input type="submit" value="Enviar" />
+        <button type="submit">Submit</button>
       </form>
+
+      <div className="wrapper">
+        {submitting && (
+          <div>
+            Completed form data
+            <ul>
+              {Object.entries(formData).map(([name, value]) => (
+                <li key={name}>
+                  <strong>{name}</strong>:{value}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
+      </div>
 
       <h2>Intelie Chart Plotter</h2>
       <br />
@@ -83,12 +146,12 @@ export const App = () => {
         margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
       >
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="timestamp" />
-        <YAxis />
+        <XAxis dataKey="timestamp"/>
+        <YAxis dataKey="maxResponseTime" />
         <Tooltip />
-        <Legend align="right" />
-        <Line type="monotone" dataKey="uv" stroke="#8884d8" />
-        <Line type="monotone" dataKey="pv" stroke="#20afd8" />
+        <Legend align="center" />
+        <Line type="monotone" dataKey="os" stroke="#8884d8" />
+        <Line type="monotone" dataKey="browser" stroke="#20afd8" />
       </LineChart>
     </div>
   );
