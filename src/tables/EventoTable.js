@@ -1,4 +1,4 @@
-import React from 'react'
+import React from "react";
 
 const EventoTable = (props) => (
   <table>
@@ -6,6 +6,10 @@ const EventoTable = (props) => (
       <tr>
         <th>Type</th>
         <th>Timestamp</th>
+        <th>OS</th>
+        <th>Browser</th>
+        <th>MinResponse</th>
+        <th>MaxResponse</th>
         <th>Actions</th>
       </tr>
     </thead>
@@ -15,6 +19,10 @@ const EventoTable = (props) => (
           <tr key={evento.id}>
             <td>{evento.type}</td>
             <td>{evento.timestamp}</td>
+            <td>{evento.os}</td>
+            <td>{evento.browser}</td>
+            <td>{evento.minResponse}</td>
+            <td>{evento.maxResponse}</td>
             <td>
               <button className="button muted-button">Edit</button>
               <button className="button muted-button">Delete</button>
@@ -23,11 +31,11 @@ const EventoTable = (props) => (
         ))
       ) : (
         <tr>
-          <td colSpan={3}>No eventos</td>
+          <td colSpan={7}>No eventos</td>
         </tr>
       )}
     </tbody>
   </table>
-)
+);
 
-export default EventoTable
+export default EventoTable;
