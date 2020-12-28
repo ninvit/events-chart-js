@@ -24,8 +24,12 @@ const EventoTable = (props) => (
             <td>{evento.minResponse}</td>
             <td>{evento.maxResponse}</td>
             <td>
-              <button className="button muted-button">Edit</button>
-              <button className="button muted-button">Delete</button>
+              <button
+                onClick={() => props.deleteEvento(evento.id)}
+                className="button muted-button"
+              >
+                Delete
+              </button>
             </td>
           </tr>
         ))
