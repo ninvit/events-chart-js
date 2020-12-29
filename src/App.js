@@ -1,7 +1,15 @@
 import React, { useState } from "react";
 import EventoTable from "./tables/EventoTable";
 import AddEventoForm from "./forms/AddEventoForm";
-import { LineChart, Line, CartesianGrid, XAxis, YAxis } from "recharts";
+import {
+  LineChart,
+  Line,
+  CartesianGrid,
+  XAxis,
+  YAxis,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 const App = () => {
   const eventosData = [];
@@ -14,9 +22,8 @@ const App = () => {
   };
 
   const deleteEvento = (id) => {
-    setEventos(eventos.filter((evento) => evento.id !== id))
-  }
-
+    setEventos(eventos.filter((evento) => evento.id !== id));
+  };
 
   return (
     <div className="container">
@@ -27,19 +34,21 @@ const App = () => {
         <div className="flex-large">
           <h2>Events chart</h2>
           <LineChart
-            width={730}
-            height={250}
-            data={eventosData}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+            width={900}
+            height={300}
+            data={eventos}
+            margin={{ top: 10, right: 30, left: 20, bottom: 5 }}
           >
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Line type="monotone" dataKey="pv" stroke="#8884d8" />
-            <Line type="monotone" dataKey="uv" stroke="#82ca9d" />
+            <XAxis dataKey="os"/>
+            <YAxis dataKey="maxResponse" />
+            <Tooltip />
+            <Legend />
+            {eventos.map((e) =>
+            <Line datakey="maxResponse" />)}
           </LineChart>
           <h2>View events</h2>
-          <EventoTable eventos={eventos} deleteEvento={deleteEvento}/>
+          <EventoTable eventos={eventos} deleteEvento={deleteEvento} />
         </div>
       </div>
     </div>
